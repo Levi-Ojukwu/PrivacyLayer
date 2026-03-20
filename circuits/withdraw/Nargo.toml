@@ -1,0 +1,8 @@
+[package]
+name = "withdraw"
+type = "bin"
+authors = ["PrivacyLayer Contributors"]
+compiler_version = ">=0.36.0"
+
+[dependencies]
+lib = { path = "../lib" }

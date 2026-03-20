@@ -1,0 +1,52 @@
+# Rust / Soroban
+target/
+Cargo.lock
+*.wasm
+*.optimized.wasm
+
+# Noir
+circuits/*/target/
+circuits/target/
+*.acir
+
+# Node / TypeScript
+node_modules/
+dist/
+.next/
+sdk/dist/
+frontend/.next/
+frontend/out/
+
+# Keys / Secrets (NEVER commit these)
+*.key
+*.pk
+*.vk
+proving_key.bin
+verifying_key.bin
+*.env
+.env.local
+.env.testnet
+.env.mainnet
+
+# Note backups (sensitive user data)
+*.note
+note_backup_*.txt
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test artifacts
+coverage/
+lcov.info
+.nyc_output/
