@@ -161,6 +161,57 @@ Run tests with: `cd circuits && nargo test`
 
 ---
 
+## Golden Vector Corpus (`sdk/test/golden/vectors.json`)
+
+The machine-readable golden corpus spans the full end-to-end ZK spend path and is
+shared across the circuit test suite, SDK witness tests, and proof-formatting tests.
+
+### Location
+
+```
+sdk/test/golden/vectors.json
+```
+
+### Coverage
+
+| ID | Scenario | Leaf index | Relayer fee |
+|---|---|---|---|
+| TV-001 | Standard single-note spend | 0 | none |
+| TV-002 | Non-zero sibling in auth path | 7 | 1 XLM |
+| TV-003 | Fee equals amount (boundary) | 0 | full amount |
+| TV-004 | Sparse tree — bit 19 only | 524288 | none |
+
+### Format
+
+Each vector captures:
+
+1. **Note preimage** — `nullifier_hex`, `secret_hex`, `pool_id`, `amount`
+2. **Field encodings** — canonical 64-char hex for nullifier and secret after
+   `bufferToField` reduction modulo the BN254 scalar field prime
+3. **Merkle witness** — `leaf_index`, `path_elements` (20 × 32 bytes), `root`
+4. **Nullifier hash** — `H(nullifier_field, root_field)` using the same algorithm
+   as the circuit (`compute_nullifier_hash` in `circuits/lib/src/hash/nullifier.nr`)
+5. **Packed public inputs** — ordered as the circuit entrypoint expects:
+   `root | nullifier_hash | recipient | amount | relayer | fee`
+
+> **Hash note**: The SDK currently uses SHA-256 as a structural stand-in for BN254
+> Pedersen.  When `@noir-lang/barretenberg` (or equivalent) is wired in, regenerate
+> the corpus by running the SDK generation script and updating the golden file.
+> Any change to public-input encoding **requires** an explicit fixture update —
+> the test suite will catch stale vectors.
+
+### Running cross-stack fixture tests
+
+```bash
+# SDK fixture tests (Jest)
+cd sdk && npm test
+
+# Circuit tests (Noir — uses the same canonical KAT values)
+cd circuits && nargo test
+```
+
+---
+
 ## References
 
 - [Tornado Cash test vectors](https://github.com/tornadocash/tornado-core/tree/master/test)
